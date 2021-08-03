@@ -20,4 +20,4 @@ var t,e=arguments[3];!function(e,n){"object"==typeof exports&&"undefined"!=typeo
 },{}],"Focm":[function(require,module,exports) {
 "use strict";var e=require("./js/apiService"),r=o(require("./tpl/photoCard")),t=o(require("lodash.debounce"));require("@pnotify/core/dist/PNotify.css"),require("@pnotify/core/dist/BrightTheme.css");var n=require("@pnotify/core");function o(e){return e&&e.__esModule?e:{default:e}}document.querySelector("#search-form").addEventListener("submit",i);const u=document.querySelector(".gallery");function i(r){r.preventDefault(),u.innerHTML="";const t=r.currentTarget.elements.query.value;(0,e.fetchImg)(t).then(c)}function c(e){if(404===e.status)return(0,n.error)({text:"Image is not found!",delay:500}),!1;s(e),console.log(e)}function s(e){u.insertAdjacentHTML("beforeend",(0,r.default)(e))}
 },{"./js/apiService":"eQwa","./tpl/photoCard":"t2Fm","lodash.debounce":"PZFh","@pnotify/core/dist/PNotify.css":"AjW3","@pnotify/core/dist/BrightTheme.css":"AjW3","@pnotify/core":"txz9"}]},{},["Focm"], null)
-//# sourceMappingURL=/goit-js-hw-13-image-finder/src.28304422.js.map
+//# sourceMappingURL=/goit-js-hw-13-image-finder/src.b8cfa63c.js.map
