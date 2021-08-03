@@ -21,12 +21,12 @@ function findImg(data) {
     error({ text: `Image is not found!`, delay: 500 });
     return false;
   } else {
-    marckup(data);
+    markup(data);
     console.log(data);
   }
 }
 
-function marckup(el) {
+function markup(el) {
   gallery.insertAdjacentHTML('beforeend', photoCardTpl(el));
 }
 
