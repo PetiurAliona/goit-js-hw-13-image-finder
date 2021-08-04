@@ -39,3 +39,7 @@
 .stats-item:not(:last-child) {
   margin-right: 15px;
 }
+
+.hide {
+  display: none;
+}

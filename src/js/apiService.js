@@ -7,4 +7,3 @@ export function fetchImg(searchInput, currentPage) {
     .then(response => response.json())
     .catch(e => error({ text: `${e}`, delay: 1500 }));
 }
-fetchImg();

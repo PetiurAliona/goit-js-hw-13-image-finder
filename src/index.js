@@ -9,62 +9,50 @@ import { success, error } from '@pnotify/core';
 document.querySelector('#search-form').addEventListener('submit', onInputAction);
 const galleryNode = document.querySelector('.gallery');
 const rootNode = document.querySelector('#root');
+let valueSearch;
+let currentPage = 1;
 
 function onInputAction(e) {
   e.preventDefault();
   galleryNode.innerHTML = '';
-  const value = e.currentTarget.elements.query.value;
-  fetchImg(value).then(findImg);
+  currentPage = 1;
+  valueSearch = e.currentTarget.elements.query.value;
+  fetchImg(valueSearch, currentPage).then(findImg);
 }
 
 function findImg(data) {
   if (data.total === 0) {
     error({ text: `Image is not found!`, delay: 500 });
-    // return false;
   } else {
-    success({ text: `${data.total} images found.`, delay: 2000 });
-    markup(data);
-    console.log(data);
+    success({ text: `${data.total} images found.`, delay: 1000 });
+    markup(data).then(() => {
+      galleryNode.querySelectorAll('li.hide').forEach(el => {
+        el.classList.remove('hide');
+      });
+      observer.observe(galleryNode.lastElementChild);
+    });
   }
 }
 
-function markup(el) {
-  galleryNode.insertAdjacentHTML('beforeend', photoCardTpl(el));
+function markup(data) {
+  galleryNode.insertAdjacentHTML('beforeend', photoCardTpl(data));
+  return new Promise((res, rej) => {
+    let counter = 0;
+    galleryNode.querySelectorAll('li.hide img').forEach(img => {
+      img.onload = () => {
+        counter++;
+        if (data.hits.length <= counter) {
+          res();
+        }
+      };
+    });
+  });
 }
 
-const observer = new IntersectionObserver(
-  (entries, observer) => {
-    entries.forEach(item => {
-      if (!item.isIntersecting) return false;
-      observer.unobserve(item.target);
-      // currentPage += 1;
-
-      galleryNode.insertAdjacentHTML('beforeend', markup(galleryNode.children.length));
-
-      observer.observe(galleryNode.lastElementChild);
-    });
-  },
-  {
-    threshold: 0.5,
-  },
-);
-// observer.observe(galleryNode.lastElementChild);
-
-// const observer = new IntersectionObserver(
-//   (entries, observer) => {
-//     entries.forEach(item => {
-//       if (item.isIntersecting) galleryNode.classList.add('hide');
-//       else galleryNode.classList.remove('hide');
-//     });
-//   },
-//   {
-//     threshold: 1,
-//   },
-// );
-// observer.observe(galleryNode);
-
-// const element = document.getElementById('.my-element-selector');
-// element.scrollIntoView({
-//   behavior: 'smooth',
-//   block: 'end',
-// });
+const observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach(item => {
+    if (!item.isIntersecting) return false;
+    observer.unobserve(item.target);
+    fetchImg(valueSearch, ++currentPage).then(findImg);
+  });
+});
